@@ -1,20 +1,34 @@
 package com.spring.microservice.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.springframework.hateoas.RepresentationModel;
 
+@Entity
+@Table(name="licenses")
 public class License extends RepresentationModel<License>{
-	private int id;
+//	private int id;
+	@Id
+	@Column(name="license_id", nullable = false)
 	private String licenseId;
 	private String description;
+	@Column(name="organization_id", nullable = false)
 	private String organizationId;
+	@Column(name="product_name", nullable = false)
 	private String productName;
+	@Column(name="license_type", nullable = false)
 	private String licenseType;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	@Column(name="comment")
+	private String comment;
+//	public int getId() {
+//		return id;
+//	}
+//	public void setId(int id) {
+//		this.id = id;
+//	}
 	public String getLicenseId() {
 		return licenseId;
 	}
@@ -45,9 +59,14 @@ public class License extends RepresentationModel<License>{
 	public void setLicenseType(String licenseType) {
 		this.licenseType = licenseType;
 	}
-	@Override
-	public String toString() {
-		return "License [id=" + id + ", licenseId=" + licenseId + ", description=" + description + ", organizationId="
-				+ organizationId + ", productName=" + productName + ", licenseType=" + licenseType + "]";
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	public License withComment(String comment) {
+		this.setComment(comment);
+		return this;
 	}
 }
