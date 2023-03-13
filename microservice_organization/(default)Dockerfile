@@ -1,0 +1,17 @@
+#start with a base image containing Java runtime
+FROM openjdk:11-slim
+
+#add maintainer info
+LABEL maintainer="suid4916"
+
+#the application's jar file
+ARG JAR_FILE #dockerfile-maven-plugin에 설정된 JAR_FILE 변수를 정의
+
+#add the application's jar to the container
+COPY ${JAR_FILE} app.jar  #JAR 파일을 이미지의 파일 시스템에 app.jar로 복사
+
+#unpackage jar file
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
+
+#execute the application
+ENTRYPOINT ["java", "-jar", "/app.jar"] #컨테이너가 생성될 때 이미지의 라이선싱 서비스 애플리케이션을 실행 대상으로 지정
