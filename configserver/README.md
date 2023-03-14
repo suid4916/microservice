@@ -26,15 +26,3 @@
 
 * bootstrap.properties 파일 생성 후 파일 안에 encrypt.key 설정
 	
-### 스프링 컨피그 엔드포인트
-##### 스프링 프로퍼티 확인
-
-기본 프로퍼티 : (GET)http://localhost:8071/licensing-service/default
-
-개발 프로퍼티 : (GET)http://localhost:8071/licensing-service/dev
-
-##### 암호화/복호화 엔드포인트
-
-암호화 : (POST(*requestBody)) http://localhost:8071/encrypt
-
-복호화 : (POST(*requestBody)) http://localhost:8071/decrypt
