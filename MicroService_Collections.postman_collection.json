@@ -1,0 +1,367 @@
+{
+	"variables": [],
+	"info": {
+		"name": "MicroService_Collections",
+		"_postman_id": "e6510000-be3a-c1eb-a711-c89965f66b81",
+		"description": "Spring micro service 컬렉션 모음",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "REST API",
+			"description": "",
+			"item": [
+				{
+					"name": "http://localhost:8080/v1/organization/organization1/license/license1",
+					"request": {
+						"url": "http://localhost:8080/v1/organization/organization1/license/license1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Config-Token",
+								"value": "myroot",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"licenseid\":\"0234567\",\n\t\"organizaitonId\":\"optima Growth\",\n\t\"description\":\"Software product\",\n\t\"productName\":\"Ostock\",\n\t\"licenseType\":\"complete\"\n}"
+						},
+						"description": "Licensing Service 데이터 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8081/v1/organization/organization1",
+					"request": {
+						"url": "http://localhost:8081/v1/organization/organization1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Config-Token",
+								"value": "myroot",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"licenseid\":\"0234567\",\n\t\"organizaitonId\":\"optima Growth\",\n\t\"description\":\"Software product\",\n\t\"productName\":\"Ostock\",\n\t\"licenseType\":\"complete\"\n}"
+						},
+						"description": "Organization 데이터 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/v1/organization/organization_test/license",
+					"request": {
+						"url": "http://localhost:8080/v1/organization/organization_test/license",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Config-Token",
+								"value": "myroot",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\":\"Software product\",\n\t\"organizationId\":\"organization_test\",\n\t\"productName\":\"Ostock\",\n\t\"licenseType\":\"complete\",\n\t\"comment\":\"comment\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8081/v1/organization",
+					"request": {
+						"url": "http://localhost:8081/v1/organization",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Config-Token",
+								"value": "myroot",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"organization_test\",\n\t\"name\":\"Ostock_organization\",\n\t\"contactName\":\"contact_name\",\n\t\"contactEmail\":\"contact_email\",\n\t\"contactPhone\":\"contact_phone\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/v1/organization/organization1/license/license1/rest",
+					"request": {
+						"url": "http://localhost:8080/v1/organization/organization1/license/license1/rest",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/v1/organization/organization1/license/license1/discovery",
+					"request": {
+						"url": "http://localhost:8080/v1/organization/organization1/license/license1/discovery",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/v1/organization/organization1/license/license1/feign",
+					"request": {
+						"url": "http://localhost:8080/v1/organization/organization1/license/license1/feign",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Actuator",
+			"description": "",
+			"item": [
+				{
+					"name": "http://localhost:8080/actuator",
+					"request": {
+						"url": "http://localhost:8080/actuator",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Config-Token",
+								"value": "myroot",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"organization_test\",\n\t\"name\":\"Ostock_organization\",\n\t\"contactName\":\"contact_name\",\n\t\"contactEmail\":\"contact_email\",\n\t\"contactPhone\":\"contact_phone\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/actuator/health",
+					"request": {
+						"url": "http://localhost:8080/actuator/health",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Config-Token",
+								"value": "myroot",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"organization_test\",\n\t\"name\":\"Ostock_organization\",\n\t\"contactName\":\"contact_name\",\n\t\"contactEmail\":\"contact_email\",\n\t\"contactPhone\":\"contact_phone\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Config Server",
+			"description": "",
+			"item": [
+				{
+					"name": "http://localhost:8071/licensing-service/default",
+					"request": {
+						"url": "http://localhost:8071/licensing-service/default",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8071/licensing-service/dev",
+					"request": {
+						"url": "http://localhost:8071/licensing-service/dev",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8071/organization-service/default",
+					"request": {
+						"url": "http://localhost:8071/organization-service/default",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8071/organization-service/dev",
+					"request": {
+						"url": "http://localhost:8071/organization-service/dev",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8071/encrypt",
+					"request": {
+						"url": "http://localhost:8071/encrypt",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "test"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8071/decrypt",
+					"request": {
+						"url": "http://localhost:8071/decrypt",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "4de42e56a3e283c982fe7f75687a57bd4cd7899d7a30ccbdd3c4697b6473553f"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Eureka Server",
+			"description": "",
+			"item": [
+				{
+					"name": "http://localhost:8070/eureka/apps",
+					"request": {
+						"url": "http://localhost:8070/eureka/apps",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "4de42e56a3e283c982fe7f75687a57bd4cd7899d7a30ccbdd3c4697b6473553f"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
