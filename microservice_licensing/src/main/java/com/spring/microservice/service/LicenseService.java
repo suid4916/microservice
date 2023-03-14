@@ -1,7 +1,5 @@
 package com.spring.microservice.service;
 
-import java.util.Locale;
-import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.spring.microservice.config.ServiceConfig;
 import com.spring.microservice.model.License;
+import com.spring.microservice.model.Organization;
 import com.spring.microservice.repository.LicenseRepository;
+import com.spring.microservice.service.client.OrganizationDiscoveryClient;
+import com.spring.microservice.service.client.OrganizationFeignClient;
+import com.spring.microservice.service.client.OrganizationRestTemplateClient;
 
 @Service
 public class LicenseService {
@@ -22,6 +24,15 @@ public class LicenseService {
 	
 	@Autowired
 	ServiceConfig config;
+	
+	@Autowired
+	private OrganizationDiscoveryClient organizationDiscoveryClient;
+	
+	@Autowired
+	private OrganizationRestTemplateClient organizationRestTemplateClinet;
+	
+	@Autowired
+	private OrganizationFeignClient organizationFeignClient;
 	
 	public License getLicense(String licenseId, String organizationId) {
 		License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
@@ -36,6 +47,48 @@ public class LicenseService {
 		return license.withComment(config.getProperty());
 	}
 	
+	public License getLicense(String licenseId, String organizationId, String clientType) {
+		License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
+		if(null == license) {
+			throw new IllegalArgumentException(String.format(messageSource.getMessage("license.search.error.message", null, null), licenseId, organizationId));
+		}
+		Organization organization = retriveOrganizationInfo(organizationId, clientType);
+		
+		if(null != organization) {
+			license.setOrganizationName(organization.getName());
+			license.setContactName(organization.getContactName());
+			license.setContactEmail(organization.getContactEmail());
+			license.setContactPhone(organization.getContactPhone());
+		}
+		return license.withComment(config.getProperty());
+	}
+	
+	private Organization retriveOrganizationInfo(String organizationId, String clientType) {
+		// TODO Auto-generated method stub
+		Organization organization = null;
+		
+		switch(clientType) {
+		case "discovery":
+			System.out.println("Dicovery client called!");
+			organization = organizationDiscoveryClient.getOrganization(organizationId);
+			break;
+		case "rest":
+			System.out.println("RestTemplate client called!");
+			organization = organizationRestTemplateClinet.getOrganization(organizationId);
+			break;
+		case "feign":
+			System.out.println("Feign client called!");
+			organization = organizationFeignClient.getOrganization(organizationId);
+			break;
+		default:
+			organization = organizationRestTemplateClinet.getOrganization(organizationId);
+			break;
+			
+		}
+		
+		return organization;
+	}
+
 	public License createLicense(License license) {
 		license.setLicenseId(UUID.randomUUID().toString());
 		licenseRepository.save(license);
