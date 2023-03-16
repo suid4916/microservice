@@ -1,7 +1,14 @@
 package com.spring.microservice.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeoutException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -13,9 +20,20 @@ import com.spring.microservice.repository.LicenseRepository;
 import com.spring.microservice.service.client.OrganizationDiscoveryClient;
 import com.spring.microservice.service.client.OrganizationFeignClient;
 import com.spring.microservice.service.client.OrganizationRestTemplateClient;
+import com.spring.microservice.utils.UserContextHolder;
+
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead.Type;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 
 @Service
 public class LicenseService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LicenseService.class);
+	
 	@Autowired
 	MessageSource messageSource;
 	
@@ -81,11 +99,9 @@ public class LicenseService {
 			organization = organizationFeignClient.getOrganization(organizationId);
 			break;
 		default:
-			organization = organizationRestTemplateClinet.getOrganization(organizationId);
+			organization = getOrganization(organizationId);
 			break;
-			
 		}
-		
 		return organization;
 	}
 
@@ -107,5 +123,75 @@ public class LicenseService {
 		licenseRepository.delete(license);
 		responseMessage= String.format(messageSource.getMessage("license.delete.message", null, null), licenseId);
 		return responseMessage;
+	}
+	
+	
+	@CircuitBreaker(name="licenseService", fallbackMethod = "buildFallbackLicenseList")
+	@Retry(name = "retryLicenseService")
+	@RateLimiter(name = "ratelimiterLicenseService")
+	@Bulkhead(name = "bulkheadLicenseService")
+	public List<License> getLicenseByOrganization(String organizationId) throws TimeoutException{
+		logger.debug("LicenseService:getLicensesByOrganization Correlation id: {}",UserContextHolder.getContext().getCorrelationId());
+		randomlyRunLong();
+		return licenseRepository.findByOrganizationId(organizationId);
+	}
+	
+	// 회복성 패턴의 순서 Retry ( CircuitBreaker ( RateLimiter ( TimeLimiter ( Bulkhead ( Function ) ) ) ) )
+	// bulkhead가 스레드 풀 생성 -> timelimiter가 스레드 시간 제한 -> ratelimiter가 해당 함수의 호출 횟수 제한 -> timelimiter & ratelimiter가 발생시킨 Exception을 circuitbreaker에 기록 및 회로 차단 -> 그 후 retry로 회복 시도
+	// bulkhead(threadpool 방식을 사용할 경우), timelimiter는 CompletableFuture 로 감싸줘야함
+//	@CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+//	@RateLimiter(name = "ratelimiterLicenseService")
+//	@Retry(name = "retryLicenseService")
+//	@Bulkhead(name = "bulkheadLicenseService", type = Type.THREADPOOL)
+////	@TimeLimiter(name="")
+//	public CompletableFuture<List<License>> getLicenseByOrganization(String organizationId) throws TimeoutException{
+//		randomlyRunLong();
+//		return  CompletableFuture.completedFuture(licenseRepository.findByOrganizationId(organizationId));
+//	}
+	
+	@CircuitBreaker(name="organizationService")
+	private Organization getOrganization(String organizationId) {
+		return organizationRestTemplateClinet.getOrganization(organizationId);
+	}
+	
+//	@SuppressWarnings("unused")
+//	private CompletableFuture<List<License>> buildFallbackLicenseList(String organizationId, Throwable t){
+//		List<License> fallbackList = new ArrayList<>();
+//		License license = new License();
+//		license.setLicenseId("00000000-000-00000");
+//		license.setOrganizationId(organizationId);
+//		license.setProductName("Sorry. No licensing information currently available");
+//		fallbackList.add(license);
+//		return  CompletableFuture.completedFuture(fallbackList);
+//	}
+	
+	@SuppressWarnings("unused")
+	private List<License> buildFallbackLicenseList(String organizationId, Throwable t){
+		List<License> fallbackList = new ArrayList<>();
+		License license = new License();
+		license.setLicenseId("00000000-000-00000");
+		license.setOrganizationId(organizationId);
+		license.setProductName("Sorry. No licensing information currently available");
+		fallbackList.add(license);
+		return  fallbackList;
+	}
+	
+	//circuitBreaker 테스트 용
+	private void randomlyRunLong() throws TimeoutException {
+		Random rand = new Random();
+		int randomNum = rand.nextInt(3) + 1;
+		if (randomNum == 3) 
+			sleep();
+//		throw new java.util.concurrent.TimeoutException();
+	}
+
+	private void sleep() throws TimeoutException {
+		try {
+			Thread.sleep(5000);
+			throw new java.util.concurrent.TimeoutException();
+		}catch (InterruptedException e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
 	}
 }

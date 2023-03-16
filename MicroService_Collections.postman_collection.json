@@ -177,6 +177,17 @@
 						"description": ""
 					},
 					"response": []
+				},
+				{
+					"name": "http://localhost:8080/v1/organization/organization1/license/",
+					"request": {
+						"url": "http://localhost:8080/v1/organization/organization1/license/",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
 				}
 			]
 		},

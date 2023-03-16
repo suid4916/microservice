@@ -1,7 +1,12 @@
 package com.spring.microservice.controller;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeoutException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,10 +23,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.spring.microservice.model.License;
 import com.spring.microservice.service.LicenseService;
+import com.spring.microservice.utils.UserContextHolder;
 
 @RestController
 @RequestMapping(value = "v1/organization/{organizationId}/license")
 public class LicenseController {
+	private static final Logger logger = LoggerFactory.getLogger(LicenseController.class);
+	
 	@Autowired
 	private LicenseService licenseService;
 	
@@ -64,4 +72,15 @@ public class LicenseController {
 	public ResponseEntity<String> deleteLicense(@PathVariable("organizationId") String organizationId, @PathVariable("licenseId") String licenseId){
 		return ResponseEntity.ok(licenseService.deleteLicense(licenseId, organizationId));
 	}
+	
+	@GetMapping(value="/")
+	public List<License> getLicenses( @PathVariable("organizationId") String organizationId) throws TimeoutException {
+		logger.debug("LicenseServiceController Correlation id :{}", UserContextHolder.getContext().getCorrelationId());
+		return licenseService.getLicenseByOrganization(organizationId);
+	}
+	
+//	@GetMapping(value="/")
+//	public CompletableFuture<List<License>> getLicenses( @PathVariable("organizationId") String organizationId) throws TimeoutException {
+//		return licenseService.getLicenseByOrganization(organizationId);
+//	}
 }
