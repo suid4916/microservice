@@ -53,6 +53,7 @@ public class LicenseService {
 	private OrganizationFeignClient organizationFeignClient;
 	
 	public License getLicense(String licenseId, String organizationId) {
+		logger.debug("LicenseService:getLicense Correlation id: {}",UserContextHolder.getContext().getCorrelationId());
 		License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
 		if(license == null) {
 			throw new IllegalArgumentException(

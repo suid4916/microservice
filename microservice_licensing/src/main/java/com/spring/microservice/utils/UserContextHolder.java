@@ -1,5 +1,7 @@
 package com.spring.microservice.utils;
 
+import org.springframework.util.Assert;
+
 public class UserContextHolder {
 	private static final ThreadLocal<UserContext> userContext = new ThreadLocal<UserContext>();
 	
@@ -19,6 +21,7 @@ public class UserContextHolder {
 	}
 	
 	private static final void setContext(UserContext context) {
+		Assert.notNull(context, "Only non-null UserContext instances are permitted");
 		userContext.set(context);
 	}
 }

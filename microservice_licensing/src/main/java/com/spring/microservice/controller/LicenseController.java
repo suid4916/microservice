@@ -35,6 +35,9 @@ public class LicenseController {
 	
 	@GetMapping(value = "/{licenseId}")
 	public ResponseEntity<License> getLicense(@PathVariable("organizationId") String organizationId, @PathVariable("licenseId") String licenseId){
+		
+		logger.debug("LicenseServiceController Correlation id :{}", UserContextHolder.getContext().getCorrelationId());
+		
 		License license = licenseService.getLicense(licenseId, organizationId);
 		
 		license.add(linkTo(methodOn(LicenseController.class)
