@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.spring</groupId>
-	<artifactId>microservice</artifactId>
+	<artifactId>microservice_organization</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>License Sevice</name>
-	<description>Ostock Licensing Service</description>
+	<name>Organization Sevice</name>
+	<description>Ostock Organization Service</description>
 	<properties>
 		<java.version>1.8</java.version>
 		<docker.image.prefix>ostock</docker.image.prefix>

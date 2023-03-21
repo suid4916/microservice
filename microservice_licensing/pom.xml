@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.spring</groupId>
-	<artifactId>microservice</artifactId>
+	<artifactId>microservice_licensing</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>License Sevice</name>
 	<description>Ostock Licensing Service</description>
