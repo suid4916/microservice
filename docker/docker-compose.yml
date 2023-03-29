@@ -1,10 +1,10 @@
 version: '2.1'
 services:
-  db:
+  database:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
-    container_name: db
+    container_name: database
     ports:
       - "3306:3306"
     environment:
@@ -18,26 +18,43 @@ services:
     networks:
       backend:
         aliases:
-          - "db"
+          - "database"  
   configserver:
     image: ostock/configserver:0.0.1-SNAPSHOT
     ports:
        - "8071:8071"
     environment:
-      ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+      # ENCRYPT_KEY: "fje83Ki8403lod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+      - spring.datasource.username=spring5
+      # ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://configserver:8071/actuator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       backend:
         aliases:
           - "configserver"
   eurekaserver:
     image: ostock/eureka:0.0.1-SNAPSHOT
+    container_name: eurekaserver
     ports:
       - "8070:8070"
+    environment:
+      # - spring.cloud.config.uri=http://configserver:8071
+      CONFIGSERVER_URI: "http://configserver:8071"
+      CONFIGSERVER_PORT: "8071"
     depends_on:
-      db:
+      database:
         condition: service_healthy
       configserver:
-        condition: service_started  
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://configserver:8071/actuator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       backend:
         aliases:
@@ -49,19 +66,19 @@ services:
     environment:
       PROFILE: "default"
       SERVER_PORT: "8072"
-      # CONFIGSERVER_URI: "http://configserver:8071"
-      # EUREKASERVER_URI: "http://eurekaserver:8070/eureka/"
-      CONFIGSERVER_URI: "http://localhost:8071"
-      EUREKASERVER_URI: "http://localhost:8070/eureka/"
+      CONFIGSERVER_URI: "http://configserver:8071"
+      EUREKASERVER_URI: "http://eurekaserver:8070/eureka/"
+      # CONFIGSERVER_URI: "http://localhost:8071"
+      # EUREKASERVER_URI: "http://localhost:8070/eureka/"
       EUREKASERVER_PORT: "8070"
       CONFIGSERVER_PORT: "8071"
     depends_on:
-      db:
+      database:
         condition: service_healthy
       configserver:
-        condition: service_started
+        condition: service_healthy
       eurekaserver:
-        condition: service_started
+        condition: service_healthy
     networks:
       backend:
         aliases:
@@ -69,19 +86,21 @@ services:
   licensingservice:
     image: ostock/microservice_licensing:0.0.1-SNAPSHOT
     environment:
-      PROFILE: "dev"
+      # PROFILE: "dev"
       # CONFIGSERVER_URI: "http://configserver:8071"
-      CONFIGSERVER_URI: "http://localhost:8071"
-      CONFIGSERVER_PORT:   "8071"
-      DATABASESERVER_PORT: "3306"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      # # CONFIGSERVER_URI: "http://localhost:8071"
+      # EUREKASERVER_URI: "http://eurekaserver:8070/eureka/"
+      # CONFIGSERVER_PORT:   "8071"
+      # DATABASESERVER_PORT: "3306"
+      # ENCRYPT_KEY:       "IMSYMMETRIC"
+      - spring.cloud.config.uri=http://configserver:8071
     depends_on:
-      db:
+      database:
         condition: service_healthy
       configserver:
-        condition: service_started
+        condition: service_healthy
       eurekaserver:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8180:8080"
     networks:
@@ -89,46 +108,67 @@ services:
   organizationservice:
     image: ostock/microservice_organization:0.0.1-SNAPSHOT
     environment:
-      PROFILE: "dev"
+      # PROFILE: "dev"
       # CONFIGSERVER_URI: "http://configserver:8071"
-      CONFIGSERVER_URI: "http://localhost:8071"
-      CONFIGSERVER_PORT:   "8071"
-      DATABASESERVER_PORT: "3306"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      # # CONFIGSERVER_URI: "http://localhost:8071"
+      # EUREKASERVER_URI: "http://eurekaserver:8070/eureka/"
+      # CONFIGSERVER_PORT:   "8071"
+      # DATABASESERVER_PORT: "3306"
+      # ENCRYPT_KEY:       "IMSYMMETRIC"
+      - spring.cloud.config.uri=http://configserver:8071
     depends_on:
-      db:
+      database:
         condition: service_healthy
       configserver:
-        condition: service_started
+        condition: service_healthy
       eurekaserver:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8081:8081"
     networks:
       - backend
-
   keycloak:
     image: alemairebe/keycloak:14.0.0
-    restart: always
+    # restart: always
     environment:
       KEYCLOAK_VERSION: 6.0.1
+      DB_VENDOR: MYSQL
+      DB_ADDR: database
+      DB_DATABASE: spring5
+      DB_USER: spring5
+      DB_PASSWORD: Admin1234
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
-      # JAVA_OPTS: "-Djboss.as.management.blocking.timeout = 6000"
-      JAVA_OPTS_APPEND: "-Djboss.as.management.blocking.timeout=7200"
     volumes:
-        - ./realm-export.json:/opt/alemairebe/keycloak/realm-export.json
-    command:
-      - "-b 0.0.0.0"
-      - "-Dkeycloak.import=/opt/alemairebe/keycloak/realm-export.json"
-      - "-Dkeycloak.profile.feature.scripts=enabled"
-      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+      - ./realm-export.json:/opt/alemairebe/keycloak/realm-export.json
     ports:
       - "8080:8080"
     networks:
       backend:
         aliases:
           - "keycloak"
+  # keycloak:
+  #   image: alemairebe/keycloak:14.0.0
+  #   restart: always
+  #   environment:
+  #     KEYCLOAK_VERSION: 6.0.1
+  #     KEYCLOAK_USER: admin
+  #     KEYCLOAK_PASSWORD: admin
+  #     # JAVA_OPTS: "-Djboss.as.management.blocking.timeout = 6000"
+  #     # JAVA_OPTS_APPEND: "-Djboss.as.management.blocking.timeout=7200"
+  #   volumes:
+  #       - ./realm-export.json:/opt/alemairebe/keycloak/realm-export.json
+  #   command:
+  #     - "-b 0.0.0.0"
+  #     - "-Dkeycloak.import=/opt/alemairebe/keycloak/realm-export.json"
+  #     - "-Dkeycloak.profile.feature.scripts=enabled"
+  #     - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     backend:
+  #       aliases:
+  #         - "keycloak"
 
 networks:
   backend:

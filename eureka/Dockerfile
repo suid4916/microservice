@@ -30,6 +30,9 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
+#configserver의 Dockerfile 주석 참조
+RUN apt-get update && apt-get install -y curl
+
 #execute the application
 #컨테이너가 생성될 때 이미지의 라이선싱 서비스 애플리케이션을 실행 대상으로 지정
 ENTRYPOINT ["java", "-cp", "app:app/lib/*", "com.spring.eureka.EurekaServerApplication"]
