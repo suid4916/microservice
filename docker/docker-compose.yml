@@ -27,6 +27,8 @@ services:
       # ENCRYPT_KEY: "fje83Ki8403lod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
       - spring.datasource.username=spring5
       # ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+      # - spring.security.oauth2.client.provider.keycloak.issuer-uri=http://keycloak:8080/auth/realms/spmia-realm
+      # - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak:8080/auth/realms/spmia-realm
     healthcheck:
       test: ["CMD", "curl", "-f", "http://configserver:8071/actuator"]
       interval: 10s
@@ -130,6 +132,7 @@ services:
   keycloak:
     image: alemairebe/keycloak:14.0.0
     # restart: always
+    container_name: 'keycloak'
     environment:
       KEYCLOAK_VERSION: 6.0.1
       DB_VENDOR: MYSQL
@@ -137,8 +140,9 @@ services:
       DB_DATABASE: spring5
       DB_USER: spring5
       DB_PASSWORD: Admin1234
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_HTTP_PORT: 8080
+      #KEYCLOAK_USER: admin
+      #KEYCLOAK_PASSWORD: admin
     volumes:
       - ./realm-export.json:/opt/alemairebe/keycloak/realm-export.json
     ports:
