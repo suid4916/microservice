@@ -22,12 +22,14 @@ public class OrganizationController {
     @Autowired
     private OrganizationService service;
 
-    @RolesAllowed({"ADMIN","USER"})
+//    @RolesAllowed({"ostock-user","ostock-admin"})
+    @RolesAllowed({"USER","ADMIN"})
     @RequestMapping(value="/{organizationId}",method = RequestMethod.GET)
     public ResponseEntity<Organization> getOrganization( @PathVariable("organizationId") String organizationId) {
         return ResponseEntity.ok(service.findById(organizationId));
     }
     
+//    @RolesAllowed("ostock-admin")
     @RolesAllowed("ADMIN")
     @RequestMapping(value="/{organizationId}/post",method = RequestMethod.POST)
     public ResponseEntity<Organization> getOrganizationPost( @PathVariable("organizationId") String organizationId) {

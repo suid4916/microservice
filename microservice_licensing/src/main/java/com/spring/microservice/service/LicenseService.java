@@ -47,7 +47,7 @@ public class LicenseService {
 	private OrganizationDiscoveryClient organizationDiscoveryClient;
 	
 	@Autowired
-	private OrganizationRestTemplateClient organizationRestTemplateClinet;
+	private OrganizationRestTemplateClient organizationRestTemplateClient;
 	
 	@Autowired
 	private OrganizationFeignClient organizationFeignClient;
@@ -93,7 +93,7 @@ public class LicenseService {
 			break;
 		case "rest":
 			System.out.println("RestTemplate client called!");
-			organization = organizationRestTemplateClinet.getOrganization(organizationId);
+			organization = organizationRestTemplateClient.getOrganization(organizationId);
 			break;
 		case "feign":
 			System.out.println("Feign client called!");
@@ -152,7 +152,7 @@ public class LicenseService {
 	
 	@CircuitBreaker(name="organizationService")
 	private Organization getOrganization(String organizationId) {
-		return organizationRestTemplateClinet.getOrganization(organizationId);
+		return organizationRestTemplateClient.getOrganization(organizationId);
 	}
 	
 //	@SuppressWarnings("unused")

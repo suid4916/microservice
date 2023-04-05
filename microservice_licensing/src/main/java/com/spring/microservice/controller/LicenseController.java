@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ public class LicenseController {
 	@Autowired
 	private LicenseService licenseService;
 	
+	@RolesAllowed({"ADMIN","USER"})
 	@GetMapping(value = "/{licenseId}")
 	public ResponseEntity<License> getLicense(@PathVariable("organizationId") String organizationId, @PathVariable("licenseId") String licenseId){
 		
