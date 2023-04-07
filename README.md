@@ -10,7 +10,7 @@
 
 --------------------------------
 
-## 주의사항
+## 주의사항    
 보안의 Keycloak의 경우, Keycloak-adapter가 2022.02로 deprecated 되었기 때문에 독자적으로 기능 구현한 부분이 있음.
 
 --------------------------------
@@ -84,7 +84,7 @@ _configserver 폴더 내부의 properties 파일 참조_
 
 ----------------------------------------------
 
-# 유레카 서버 구축 (eureka)
+## 유레카 서버 구축 (eureka)
 
 1. 스프링 클라우드 버전 `2021.0.6` 을 사용
 2. 해당 버전은 기본 설정을 자동으로 하지 않기 때문에 Maven 에 `spring-cloud-starter-bootstrap` 패키지를 spring cloud를 사용하는 모든 어플리케이션에 추가
@@ -117,7 +117,7 @@ com.spring.microservice.service.`LicenseService` 의 `getLicense` 함수 참조
 
 -------------------------------------
 
-# Resilience4j 로 회복성 적용 (microservice_licensing)
+## Resilience4j 로 회복성 적용 (microservice_licensing)
 
 ##### Resilience4j에서 사용하는 패턴
 | 패턴 | 설명 |
@@ -152,7 +152,7 @@ public CompletableFuture<List<model_class>> getData(){
 
 ---------------------------------------
 
-# 스프링 클라우드 게이트웨이 (gatewayserver)   
+## 스프링 클라우드 게이트웨이 (gatewayserver)   
 1. `applicaion.properties` 설정 및 `configserver`의 `gateway-server.properties` 참조  
 2. `http://localhost:8072/licensing-service/v1/organization/<organizationID>/license/<licenseID>`로 호출 가능
 3. `http://localhost:8072/organization-service/v1/organization/<organizationID>` 또한 호출 가능
