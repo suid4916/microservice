@@ -166,6 +166,26 @@ public CompletableFuture<List<model_class>> getData(){
 
 `ResponseFilter` -> HTTP 응답에 정보 추가 (게이트웨이 서비스는 클라이언트의 응답을 다시 검사하여 정보를 추가하거나, 마지막 로깅을 추가할 수 있다.)
 
+-------------------------------------------
+
+## Keycloak 보안
+
+1. `docker`로 `keycloak` 이미지 import & run  
+`KEYCLOAK_USER: admin`  
+`KEYCLOAK_PASSWORD: admin`  
+docker-compose로 재 실행시, USER, PASSWORD는 주석처리    
+
+*로컬 환경 테스트 시 iss(issure)를 맞추기 위해, hosts 파일에 `127.0.0.1 keycloak` 항목을 추가해야함*    
+윈도우: `C:\Windows\System32\drivers\etc\hosts`    
+리눅스: `/etc/hosts`    
+*Docker container는 네트워크 별칭이나 MAC 주소로 통신할 수 있으나*   
+*Postman통신 시, localhost로 통신하기 때문에 iss가 mismatching되기 때문에 정확히 실행해도 권한 없음을 return 한다.*     
+
+2. `Keycloak`  실행 후, `realm`을 생성한다.
+- `realm`: 사용자, 자격 증명, 역할, 그룹을 관리하는 영역   
+- `client`: 사용자 인증을 요청할 수 있는 개체. 주로 애플리케이션, 서비스를 지칭.    
+- `client-role`: 사용자의 역할을 설정함. 여기서는 `USER`, `ADMIN`으로 역할을 생성   
+- `user`: 애플리케이션에서 자격증명에 로그인 할 account
 
 
 
