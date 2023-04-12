@@ -1,8 +1,13 @@
 package com.spring.microservice.model;
 
+import javax.persistence.Id;
+
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.hateoas.RepresentationModel;
 
+@RedisHash("organization")
 public class Organization extends RepresentationModel<Organization>{
+	@Id
 	String id;
     String name;
     String contactName;

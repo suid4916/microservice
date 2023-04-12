@@ -32,4 +32,5 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
 #execute the application
 #컨테이너가 생성될 때 이미지의 라이선싱 서비스 애플리케이션을 실행 대상으로 지정s
+# ENTRYPOINT ["sh", "-c", "java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000 -cp app:app/lib/* com.spring.microservice.OrganizationServiceApplication"]
 ENTRYPOINT ["java", "-cp", "app:app/lib/*", "com.spring.microservice.OrganizationServiceApplication"]

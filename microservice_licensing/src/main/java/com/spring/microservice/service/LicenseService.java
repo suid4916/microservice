@@ -99,9 +99,6 @@ public class LicenseService {
 			System.out.println("Feign client called!");
 			organization = organizationFeignClient.getOrganization(organizationId);
 			break;
-		case "rest_post":
-			System.out.println("RestTemplate client post called!");
-			organization = getOrganization(organizationId, clientType);
 		default:
 			organization = getOrganization(organizationId);
 			break;
@@ -156,11 +153,6 @@ public class LicenseService {
 	@CircuitBreaker(name="organizationService")
 	private Organization getOrganization(String organizationId) {
 		return organizationRestTemplateClient.getOrganization(organizationId);
-	}
-	
-	@CircuitBreaker(name="organizationService")
-	private Organization getOrganization(String organizationId, String requestMethod) {
-		return organizationRestTemplateClient.getOrganization(organizationId, requestMethod);
 	}
 	
 //	bulkhead의 타입이 threadpool일 때 사용
